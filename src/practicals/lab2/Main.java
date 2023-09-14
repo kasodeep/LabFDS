@@ -14,7 +14,8 @@ public class Main {
         while (ans) {
 
             // Menu for doing the operation.
-            System.out.println("Insert : 1, Delete : 2, Find: 3, GetElement : 4, Display : 5, DuplicateDelete : 6, InsertAt : 7, DeleteAt : 8, Quit : 9");
+            System.out.println("Insert : 1, Delete : 2, Find: 3, GetElement : 4, Display : 5, DuplicateDelete : 6," +
+                    " InsertAt : 7, DeleteAt : 8, Random Init : 9, Bubble Sort : 10, Selection Sort : 11, Insertion Sort : 12, Quit : 13");
             int num = sc.nextInt();
 
             switch (num) {
@@ -61,8 +62,23 @@ public class Main {
                     int index = sc.nextInt();
                     System.out.println(array.deleteAt(index));
                 }
-
-                case 9 -> ans = false;
+                case 9 -> {
+                    array.initArray();
+                    System.out.println("Successfully Initialized");
+                }
+                case 10 -> {
+                    array.bubbleSort();
+                    System.out.println("Successfully sorted using Bubble Sort");
+                }
+                case 11 -> {
+                    array.selectionSort();
+                    System.out.println("Successfully sorted using Selection Sort");
+                }
+                case 12 -> {
+                    array.insertionSort();
+                    System.out.println("Successfully sorted using Insertion Sort");
+                }
+                case 13 -> ans = false;
                 default -> System.out.println("Please enter valid option.");
             }
         }
