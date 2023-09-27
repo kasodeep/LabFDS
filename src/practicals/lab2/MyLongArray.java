@@ -45,12 +45,13 @@ public class MyLongArray {
      * The internal long array that stores the elements of this MyLongArray instance.
      */
     private final long[] arr;
-    private int currentIndex;
 
     /**
      * The current number of elements in the array.
      * It keeps track of the last available index for insertion.
      */
+    private int currentIndex;
+
     public MyLongArray(int size) {
         arr = new long[size];
         currentIndex = 0;
@@ -184,7 +185,6 @@ public class MyLongArray {
         currentIndex--;
         return temp;
     }
-
 
     /**
      * Function to initialize the array with Random variables.
