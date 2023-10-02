@@ -1,0 +1,4 @@
+Abstract Data Types are the ones which has predefined methods.
+Java's Generic Framework, allowing the elements stored in the stack belong to any object of type <E>/
+
+One Example of Queue: Data Packets to be Transmitted over the internet.
