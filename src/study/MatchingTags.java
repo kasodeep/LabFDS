@@ -10,21 +10,21 @@ public class MatchingTags {
         Stack<String> st = new Stack<>();
 
         for (int i = 0; i < text.length(); i++) {
-            if(text.charAt(i) == '<'){
-                if(text.charAt(i + 1) != '/'){
+            if (text.charAt(i) == '<') {
+                if (text.charAt(i + 1) != '/') {
 
                     // Find the tag name.
                     int temp = i;
-                    while(i < text.length() && text.charAt(i) != '>') i++;
+                    while (i < text.length() && text.charAt(i) != '>') i++;
 
                     // Push onto the stack.
                     st.push(text.substring(temp + 1, i));
-                }else{
+                } else {
                     int temp = i + 1;
-                    while(i < text.length() && text.charAt(i) != '>') i++;
-                    String check = text.substring(temp +1, i);
+                    while (i < text.length() && text.charAt(i) != '>') i++;
+                    String check = text.substring(temp + 1, i);
 
-                    if(st.isEmpty() || !st.peek().equals(check)){
+                    if (st.isEmpty() || !st.peek().equals(check)) {
                         System.out.println("Not Proper");
                         break;
                     }
@@ -33,7 +33,7 @@ public class MatchingTags {
             }
         }
 
-        if(st.size() == 0){
+        if (st.size() == 0) {
             System.out.println("Proper");
         }
     }
