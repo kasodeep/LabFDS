@@ -63,24 +63,35 @@ public class Main {
                     System.out.println(array.deleteAt(index));
                 }
                 case 9 -> {
-                    array.initArray();
+                    long[] initArray = array.initArray(array.getCurrentIndex());
                     System.out.println("Successfully Initialized");
+                    printArray(initArray);
                 }
                 case 10 -> {
-                    array.bubbleSort();
+                    long[] sorted = array.bubbleSort(array.getArr(), array.getCurrentIndex());
                     System.out.println("Successfully sorted using Bubble Sort");
+                    printArray(sorted);
                 }
                 case 11 -> {
-                    array.selectionSort();
+                    long[] sorted = array.selectionSort(array.getArr(), array.getCurrentIndex());
                     System.out.println("Successfully sorted using Selection Sort");
+                    printArray(sorted);
                 }
                 case 12 -> {
-                    array.insertionSort();
+                    long[] sorted = array.insertionSort(array.getArr(), array.getCurrentIndex());
                     System.out.println("Successfully sorted using Insertion Sort");
+                    printArray(sorted);
                 }
                 case 13 -> ans = false;
                 default -> System.out.println("Please enter valid option.");
             }
         }
+    }
+
+    public static void printArray(long[] arr) {
+        for (long l : arr) {
+            System.out.print(l + " ");
+        }
+        System.out.println();
     }
 }

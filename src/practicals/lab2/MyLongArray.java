@@ -1,7 +1,5 @@
 package practicals.lab2;
 
-import java.util.Random;
-
 /**
  * MyLongArray is a class designed to manage an array of long integers.
  * It provides methods for various array operations such as insertion, deletion,
@@ -23,8 +21,6 @@ import java.util.Random;
  *   <li>Deletion of duplicate occurrences of a specified element.</li>
  *   <li>Insertion of elements at a specified index.</li>
  *   <li>Deletion and retrieval of elements at a specified index.</li>
- *   <li>Initialization of the array with random values.</li>
- *   <li>Sorting of the array using Bubble Sort, Selection Sort, and Insertion Sort techniques.</li>
  * </ul>
  *
  * <p>Instances of this class can be created with a specified initial size, and
@@ -39,7 +35,7 @@ import java.util.Random;
  * @see MyLongArray#arr
  * @see MyLongArray#currentIndex
  */
-public class MyLongArray {
+public class MyLongArray extends ExtraMethods {
 
     /**
      * The internal long array that stores the elements of this MyLongArray instance.
@@ -55,6 +51,18 @@ public class MyLongArray {
     public MyLongArray(int size) {
         arr = new long[size];
         currentIndex = 0;
+    }
+
+    public long[] getArr() {
+        return arr;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
     }
 
     /**
@@ -184,72 +192,6 @@ public class MyLongArray {
 
         currentIndex--;
         return temp;
-    }
-
-    /**
-     * Function to initialize the array with Random variables.
-     */
-    public void initArray() {
-        Random random = new Random();
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = random.nextInt(100);
-        }
-        currentIndex = arr.length;
-    }
-
-    /**
-     * Function to sort the array using Bubble Sort Technique.
-     */
-    public void bubbleSort() {
-        for (int i = 0; i < currentIndex; i++) {
-            boolean flag = false;
-
-            for (int j = 0; j < currentIndex - i - 1; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    flag = true;
-                    swap(j, j + 1);
-                }
-            }
-
-            if (!flag) break;
-        }
-    }
-
-    /**
-     * Function to sort the array using Insertion Sort Technique.
-     */
-    public void selectionSort() {
-        for (int i = 0; i < currentIndex; i++) {
-            int min = i;
-            for (int j = i + 1; j < currentIndex; j++) {
-                if (arr[j] < arr[min]) {
-                    min = j;
-                }
-            }
-            swap(min, i);
-        }
-    }
-
-    /**
-     * Function to sort the array using Insertion Sort Technique.
-     */
-    public void insertionSort() {
-        for (int i = 1; i < currentIndex; i++) {
-            long temp = arr[i];
-            int j = i;
-            while (j > 0 && temp <= arr[j - 1]) {
-                arr[j] = arr[j - 1];
-                j--;
-            }
-            arr[j] = temp;
-        }
-    }
-
-    // Private helper method for swapping array elements.
-    private void swap(int i, int j) {
-        long temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
     }
 }
 
