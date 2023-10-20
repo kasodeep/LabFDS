@@ -90,6 +90,6 @@ public class ArrayStack<E> implements Stack<E>{
         if(isEmpty()) return null;
         E popped = data[t];
         data[t--] = null;
-        return data[t];
+        return popped;
     }
 }
