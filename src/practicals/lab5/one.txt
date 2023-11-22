@@ -1,0 +1,6 @@
+Electronics R'Us
+R&D,Sales,Purchasing,Manufacturing
+ Domestic,International  TV,CD,Tuner
+  Canada,S.America,Overseas
+    Africa,Europe,Asia,Australia
+    South,North
