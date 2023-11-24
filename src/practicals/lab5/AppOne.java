@@ -3,20 +3,34 @@ package practicals.lab5;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
-public class MainOne {
+/**
+ * The {@code AppOne} class is an application that reads a file containing a hierarchical tree structure
+ * and uses it to create and print a generic tree. The file is expected to follow a specific format,
+ * where each line represents a node in the tree and its children.
+ */
+public class AppOne {
 
+    /**
+     * Reads a file, extracts the tree structure, and generates a generic tree.
+     */
     public static void main(String[] args) {
         // Contents.
         StringBuilder text = new StringBuilder();
 
         try {
+            // Getting the Folder Path.
+            Path currRelativePath = Paths.get("");
+            String currAbsolutePathString = currRelativePath.toAbsolutePath().toString();
+
             // Opening a File.
-            File file_create = new File("D:\\Java\\LabFDS\\src\\practicals\\lab5\\one.txt");
+            File file_create = new File(currAbsolutePathString + "/src/practicals/lab5/one.txt");
 
             // Reading a File.
             BufferedReader br = new BufferedReader(new FileReader(file_create));
@@ -24,6 +38,7 @@ public class MainOne {
             while ((line = br.readLine()) != null) {
                 text.append(line).append("\n");
             }
+            br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +60,6 @@ public class MainOne {
         // Going over each line.
         while (j < lines.length) {
             String[] allChildren = lines[j].split(" ");
-            System.out.println(allChildren.length);
             j++;
 
             int count = 0;
@@ -77,7 +91,7 @@ public class MainOne {
         depthPrefix.append(" ".repeat(depth));
 
         String currentIndex = parentIndex.isEmpty() ? "" : parentIndex + ".";
-        if(!Objects.equals(node.getElement(), ""))
+        if (!Objects.equals(node.getElement(), ""))
             System.out.println(depthPrefix + currentIndex + node.getElement());
         else
             return;
@@ -91,3 +105,4 @@ public class MainOne {
         }
     }
 }
+
