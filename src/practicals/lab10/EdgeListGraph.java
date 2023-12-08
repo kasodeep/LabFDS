@@ -3,27 +3,23 @@ package practicals.lab10;
 import practicals.lab4.LinkedPositionalList;
 import practicals.lab4.Position;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 /**
- * Implementation of a graph using an adjacency matrix representation.
+ * Implementation of a graph using an edge list representation.
  *
  * @param <V> The type of the element associated with vertices.
  * @param <E> The type of the element associated with edges.
  */
-public class AdjacencyMatrixGraph<V, E> implements Graph<V, E> {
+public class EdgeListGraph<V, E> implements Graph<V, E> {
+    private final LinkedPositionalList<Vertex<V>> vertices;
+    private final LinkedPositionalList<Edge<E>> edges;
 
-    private final boolean isDirected;
-    private final LinkedPositionalList<Vertex<V>> vertices = new LinkedPositionalList<>();
-    private final LinkedPositionalList<Edge<E>> edges = new LinkedPositionalList<>();
-    private final Map<Vertex<V>, Integer> vertexIndices = new HashMap<>();
-    private Edge<E>[][] adjacencyMatrix;
-
-    public AdjacencyMatrixGraph(boolean isDirected) {
-        this.isDirected = isDirected;
-        this.adjacencyMatrix = new Edge[10][10];
+    public EdgeListGraph() {
+        this.vertices = new LinkedPositionalList<>();
+        this.edges = new LinkedPositionalList<>();
     }
 
     @Override
@@ -48,9 +44,7 @@ public class AdjacencyMatrixGraph<V, E> implements Graph<V, E> {
 
     @Override
     public Edge<E> getEdge(Vertex<V> u, Vertex<V> v) {
-        int indexU = vertexIndices.get(u);
-        int indexV = vertexIndices.get(v);
-        return adjacencyMatrix[indexU][indexV];
+        return null;
     }
 
     @Override
@@ -62,74 +56,94 @@ public class AdjacencyMatrixGraph<V, E> implements Graph<V, E> {
     @Override
     public Vertex<V> opposite(Vertex<V> v, Edge<E> e) throws IllegalArgumentException {
         InnerEdge<E> edge = validate(e);
+        InnerVertex<V> vertex = validate(v);
         Vertex<V>[] endpoints = edge.getEndpoints();
 
-        if (endpoints[0].equals(v)) return endpoints[1];
-        else if (endpoints[1].equals(v)) return endpoints[0];
+        if (endpoints[0].equals(vertex)) return endpoints[1];
+        else if (endpoints[1].equals(vertex)) return endpoints[0];
         else throw new IllegalArgumentException("v is not incident to this edge.");
     }
 
     @Override
     public int inDegree(Vertex<V> v) {
         InnerVertex<V> vertex = validate(v);
-        return vertex.incoming.size();
+        int count = 0;
+        Iterator<Edge<E>> iterator = edges.iterator();
+
+        while (iterator.hasNext()) {
+            Edge<E> edge = iterator.next();
+            InnerEdge<E> validate = validate(edge);
+            if (validate.getEndpoints()[1] == vertex) count++;
+        }
+        return count;
     }
 
     @Override
     public int outDegree(Vertex<V> v) {
+        int count = 0;
         InnerVertex<V> vertex = validate(v);
-        return vertex.incoming.size();
+        Iterator<Edge<E>> iterator = edges.iterator();
+
+        while (iterator.hasNext()) {
+            Edge<E> edge = iterator.next();
+            InnerEdge<E> validate = validate(edge);
+            if (validate.getEndpoints()[0] == vertex) count++;
+        }
+        return count;
     }
 
     @Override
     public Iterator<Edge<E>> outgoingEdges(Vertex<V> v) {
+        List<Edge<E>> outgoingEdges = new ArrayList<>();
         InnerVertex<V> vertex = validate(v);
-        return vertex.outgoing.iterator();
+        Iterator<Edge<E>> iterator = edges.iterator();
+
+        while (iterator.hasNext()) {
+            Edge<E> edge = iterator.next();
+            InnerEdge<E> validate = validate(edge);
+            if (validate.getEndpoints()[0] == vertex) outgoingEdges.add(edge);
+        }
+        return outgoingEdges.iterator();
     }
 
     @Override
     public Iterator<Edge<E>> incomingEdges(Vertex<V> v) {
+        List<Edge<E>> incomingEdges = new ArrayList<>();
         InnerVertex<V> vertex = validate(v);
-        return vertex.incoming.iterator();
+        Iterator<Edge<E>> iterator = edges.iterator();
+
+        while (iterator.hasNext()) {
+            Edge<E> edge = iterator.next();
+            InnerEdge<E> validate = validate(edge);
+            if (validate.getEndpoints()[1] == vertex) incomingEdges.add(edge);
+        }
+        return incomingEdges.iterator();
     }
 
     @Override
     public Vertex<V> insertVertex(V v) {
-        InnerVertex<V> vertex = new InnerVertex<>(v, isDirected);
-        vertex.setPosition(vertices.addLast(vertex));
-
-        int index = vertices.size() - 1;
-        vertexIndices.put(vertex, index);
-        ensureMatrixCapacity(index + 1, index + 1);
+        InnerVertex<V> vertex = new InnerVertex<>(v);
+        vertices.addLast(vertex);
         return vertex;
     }
 
     @Override
     public Edge<E> insertEdge(Vertex<V> v, Vertex<V> u, E e) {
-        if (getEdge(u, v) == null) {
-            InnerEdge<E> edge = new InnerEdge<>(u, v, e);
-            edge.setPosition(edges.addLast(edge));
-
-            int indexU = vertexIndices.get(u);
-            int indexV = vertexIndices.get(v);
-
-            adjacencyMatrix[indexU][indexV] = edge;
-            if (!isDirected) adjacencyMatrix[indexV][indexU] = edge;
-            return edge;
-        } else {
-            throw new IllegalArgumentException("Edge from u to v exists!");
-        }
+        InnerEdge<E> edge = new InnerEdge<>(v, u, e);
+        edges.addLast(edge);
+        return edge;
     }
 
     @Override
     public void removeVertex(Vertex<V> v) {
         InnerVertex<V> vertex = validate(v);
+        Iterator<Edge<E>> iterator = edges.iterator();
 
-        Iterator<Edge<E>> iterator = vertex.getOutgoing().iterator();
-        while (iterator.hasNext()) removeEdge(iterator.next());
-
-        iterator = vertex.getIncoming().iterator();
-        while (iterator.hasNext()) removeEdge(iterator.next());
+        while (iterator.hasNext()) {
+            Edge<E> edge = iterator.next();
+            if (validate(edge).getEndpoints()[0].equals(vertex) || validate(edge).getEndpoints()[1].equals(vertex))
+                removeEdge(edge);
+        }
     }
 
     @Override
@@ -138,18 +152,7 @@ public class AdjacencyMatrixGraph<V, E> implements Graph<V, E> {
         edges.remove(edge.getPosition());
     }
 
-    private void ensureMatrixCapacity(int numRows, int numCols) {
-        // Resize the matrix if needed
-        if (numRows > adjacencyMatrix.length || numCols > adjacencyMatrix[0].length) {
-            int newSize = Math.max(numRows, adjacencyMatrix.length * 2);
-            Edge<E>[][] newMatrix = new Edge[newSize][newSize];
-            for (int i = 0; i < adjacencyMatrix.length; i++) {
-                System.arraycopy(adjacencyMatrix[i], 0, newMatrix[i], 0, adjacencyMatrix[i].length);
-            }
-            adjacencyMatrix = newMatrix;
-        }
-    }
-
+    @Override
     public Vertex<V> findVertex(V value) {
         Iterator<Vertex<V>> iterator = vertices.iterator();
         while (iterator.hasNext()) {
@@ -190,22 +193,16 @@ public class AdjacencyMatrixGraph<V, E> implements Graph<V, E> {
     }
 
     /**
-     * Inner class representing a vertex in the adjacency matrix graph.
+     * Inner class representing a vertex in the adjacency list graph.
      *
      * @param <V> The type of the element associated with the vertex.
      */
-    private class InnerVertex<V> implements Vertex<V> {
+    private static class InnerVertex<V> implements Vertex<V> {
         private final V element;
-        private final LinkedPositionalList<Edge<E>> outgoing;
-        private final LinkedPositionalList<Edge<E>> incoming;
         private Position<Vertex<V>> pos;
 
-        public InnerVertex(V element, boolean isDirected) {
+        public InnerVertex(V element) {
             this.element = element;
-            outgoing = new LinkedPositionalList<>();
-
-            if (isDirected) incoming = new LinkedPositionalList<>();
-            else incoming = outgoing;
         }
 
         @Override
@@ -220,18 +217,10 @@ public class AdjacencyMatrixGraph<V, E> implements Graph<V, E> {
         public void setPosition(Position<Vertex<V>> pos) {
             this.pos = pos;
         }
-
-        public LinkedPositionalList<Edge<E>> getOutgoing() {
-            return outgoing;
-        }
-
-        public LinkedPositionalList<Edge<E>> getIncoming() {
-            return incoming;
-        }
     }
 
     /**
-     * Inner class representing an edge in the adjacency matrix graph.
+     * Inner class representing an edge in the adjacency list graph.
      *
      * @param <E> The type of the element associated with the edge.
      */

@@ -5,6 +5,12 @@ import practicals.lab4.Position;
 
 import java.util.Iterator;
 
+/**
+ * Implementation of a graph using an adjacency list representation.
+ *
+ * @param <V> The type of the element associated with vertices.
+ * @param <E> The type of the element associated with edges.
+ */
 public class AdjacencyListGraph<V, E> implements Graph<V, E> {
 
     private final boolean isDirected;
@@ -58,8 +64,8 @@ public class AdjacencyListGraph<V, E> implements Graph<V, E> {
         InnerEdge<E> edge = validate(e);
         Vertex<V>[] endpoints = edge.getEndpoints();
 
-        if (endpoints[0] == v) return endpoints[1];
-        else if (endpoints[1] == v) return endpoints[0];
+        if (endpoints[0].equals(v)) return endpoints[1];
+        else if (endpoints[1].equals(v)) return endpoints[0];
         else throw new IllegalArgumentException("v is not incident to this edge.");
     }
 
@@ -127,8 +133,27 @@ public class AdjacencyListGraph<V, E> implements Graph<V, E> {
         edges.remove(edge.getPosition());
     }
 
+    public Vertex<V> findVertex(V value) {
+        Iterator<Vertex<V>> iterator = vertices.iterator();
+        while (iterator.hasNext()) {
+            Vertex<V> vertex = iterator.next();
+            if (vertex.getVertex().equals(value)) return vertex;
+        }
+        return null;
+    }
+
+    @Override
+    public Edge<E> findEdge(E value) {
+        Iterator<Edge<E>> iterator = edges.iterator();
+        while (iterator.hasNext()) {
+            Edge<E> edge = iterator.next();
+            if (edge.getElement().equals(value)) return edge;
+        }
+        return null;
+    }
+
     private InnerEdge<E> validate(Edge<E> e) throws IllegalArgumentException {
-        if (!(e instanceof InnerEdge<E>))
+        if (!(e instanceof InnerEdge))
             throw new IllegalArgumentException("Passed position is invalid");
 
         InnerEdge<E> edge = (InnerEdge<E>) e;
@@ -138,7 +163,7 @@ public class AdjacencyListGraph<V, E> implements Graph<V, E> {
     }
 
     private InnerVertex<V> validate(Vertex<V> v) throws IllegalArgumentException {
-        if (!(v instanceof InnerVertex<V>))
+        if (!(v instanceof InnerVertex))
             throw new IllegalArgumentException("Passed position is invalid");
 
         InnerVertex<V> vertex = (InnerVertex<V>) v;
@@ -147,6 +172,11 @@ public class AdjacencyListGraph<V, E> implements Graph<V, E> {
         return vertex;
     }
 
+    /**
+     * Inner class representing a vertex in the adjacency list graph.
+     *
+     * @param <V> The type of the element associated with the vertex.
+     */
     private class InnerVertex<V> implements Vertex<V> {
         private final V element;
         private final LinkedPositionalList<Edge<E>> outgoing;
@@ -183,6 +213,11 @@ public class AdjacencyListGraph<V, E> implements Graph<V, E> {
         }
     }
 
+    /**
+     * Inner class representing an edge in the adjacency list graph.
+     *
+     * @param <E> The type of the element associated with the edge.
+     */
     private class InnerEdge<E> implements Edge<E> {
         private final E element;
         private final Vertex<V>[] endpoints;
