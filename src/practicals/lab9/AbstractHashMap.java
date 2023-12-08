@@ -99,7 +99,6 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
      */
     public V remove(K key) {
         return bucketRemove(hashValue(key), key);
-
     }
 
     /**
@@ -139,6 +138,7 @@ public abstract class AbstractHashMap<K, V> extends AbstractMap<K, V> {
             buffer.add(e);
         capacity = newCap;
         createTable();
+
         n = 0;
         for (Entry<K, V> e : buffer)
             put(e.getKey(), e.getValue());

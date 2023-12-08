@@ -152,7 +152,6 @@ public class LinearProbeHashMap<K, V> extends AbstractHashMap<K, V> {
             if (!isAvailable(h))
                 buffer.add(table[h]);
         }
-
         return buffer;
     }
 }

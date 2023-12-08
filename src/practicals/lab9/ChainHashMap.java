@@ -74,6 +74,7 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
         UnsortedTableMap<K, V> bucket = table[h];
         if (bucket == null)
             bucket = table[h] = new UnsortedTableMap<>();
+
         int oldSize = bucket.size();
         V answer = bucket.put(k, v);
         n = n + (bucket.size() - oldSize);
@@ -104,10 +105,7 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
             if (table[h] != null)
                 for (Entry<K, V> entry : table[h].entrySet())
                     buffer.add(entry);
-
         }
         return buffer;
     }
-
 }
-

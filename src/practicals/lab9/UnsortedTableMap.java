@@ -76,7 +76,6 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
             return null;
         } else
             return table.get(j).setValue(value);
-
     }
 
     /**
@@ -92,9 +91,9 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
         if (j == -1)
             return null;
         V answer = table.get(j).getValue();
+
         if (j != n - 1)
             table.set(j, table.get(n - 1));
-
         table.remove(n - 1);
 
         return answer;
